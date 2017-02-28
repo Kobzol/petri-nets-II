@@ -186,8 +186,114 @@
           <id>triangle</id>
           <layout>var triangle : TRIANGLE;</layout>
         </var>
+        <ml id="ID1412433038">fun vecSub (p1, p2) =
+let
+   val {x as x1, y as y1, z as z1, w as w1} = p1
+   val {x as x2, y as y2, z as z2, w as w2} = p2
+   val xNew = (x1 - x2) + 0.0
+   val yNew = (y1 - y2) + 0.0
+   val zNew = (z1 - z2) + 0.0
+   val wNew = (w1 - w2) + 0.0
+   val result = {x = xNew, y = yNew, z = zNew, w = wNew}
+in
+  result
+end;
+          <layout>fun vecSub (p1, p2) =
+let
+   val {x as x1, y as y1, z as z1, w as w1} = p1
+   val {x as x2, y as y2, z as z2, w as w2} = p2
+   val xNew = (x1 - x2) + 0.0
+   val yNew = (y1 - y2) + 0.0
+   val zNew = (z1 - z2) + 0.0
+   val wNew = (w1 - w2) + 0.0
+   val result = {x = xNew, y = yNew, z = zNew, w = wNew}
+in
+  result
+end;</layout>
+        </ml>
+        <ml id="ID1412436211">fun vecCross (p1, p2) = 
+let
+   val {x as x1, y as y1, z as z1, w as w1} = p1
+   val {x as x2, y as y2, z as z2, w as w2} = p2
+   val xNew = (((y1 * z2) + 0.0) - ((y2 * z1) + 0.0)) + 0.0
+   val yNew = (((z1 * x2) + 0.0) - ((z2 * x1) + 0.0)) + 0.0
+   val zNew = (((x1 * y2) + 0.0) - ((x2 * y1) + 0.0)) + 0.0
+   val result = {x=xNew, y=yNew, z=zNew, w=0.0}
+in
+   result
+end;
+          <layout>fun vecCross (p1, p2) = 
+let
+   val {x as x1, y as y1, z as z1, w as w1} = p1
+   val {x as x2, y as y2, z as z2, w as w2} = p2
+   val xNew = (((y1 * z2) + 0.0) - ((y2 * z1) + 0.0)) + 0.0
+   val yNew = (((z1 * x2) + 0.0) - ((z2 * x1) + 0.0)) + 0.0
+   val zNew = (((x1 * y2) + 0.0) - ((x2 * y1) + 0.0)) + 0.0
+   val result = {x=xNew, y=yNew, z=zNew, w=0.0}
+in
+   result
+end;</layout>
+        </ml>
+        <ml id="ID1412486758">fun vecLength {x, y, z, w} = Math.sqrt((x*x) + (y*y) + (z*z))
+          <layout>fun vecLength {x, y, z, w} = Math.sqrt((x*x) + (y*y) + (z*z))</layout>
+        </ml>
+        <ml id="ID1412491886">fun vecNormalize {x, y, z, w} =
+let
+   val len = vecLength({x=x, y=y, z=z, w=w})
+in
+   {x=(x/len), y=(y/len), z=(z/len), w=0.0}
+end;
+          <layout>fun vecNormalize {x, y, z, w} =
+let
+   val len = vecLength({x=x, y=y, z=z, w=w})
+in
+   {x=(x/len), y=(y/len), z=(z/len), w=0.0}
+end;</layout>
+        </ml>
+        <ml id="ID1412440781">fun vecDot (p1, p2) =
+let
+   val {x as x1, y as y1, z as z1, w as w1} = p1
+   val {x as x2, y as y2, z as z2, w as w2} = p2
+   val result = x1 * x2 + y1 * y2 + z1 * x2
+in
+   result + 0.0
+end;
+          <layout>fun vecDot (p1, p2) =
+let
+   val {x as x1, y as y1, z as z1, w as w1} = p1
+   val {x as x2, y as y2, z as z2, w as w2} = p2
+   val result = x1 * x2 + y1 * y2 + z1 * x2
+in
+   result + 0.0
+end;</layout>
+        </ml>
         <ml id="ID1412366682">fun createTriangle points = (List.nth(points, 0), List.nth(points, 1), List.nth(points, 2))
           <layout>fun createTriangle points = (List.nth(points, 0), List.nth(points, 1), List.nth(points, 2))</layout>
+        </ml>
+        <ml id="ID1412404512">fun cullTriangle (v1, v2, v3) =
+let
+   val {pos as pos1, col as col1} = v1
+   val {pos as pos2, col as col2} = v2
+   val {pos as pos3, col as col3} = v3
+   val vec1 = vecSub(pos1, pos2)
+   val vec2 = vecSub(pos1, pos3)
+   val vec3 = vecCross(vec1, vec2)
+   val cameraVec = {x=0.0, y=0.0, z=(~1.0), w=0.0}
+in
+   if vecDot(vec3, cameraVec) &lt; 0.0 then empty else 1`(v1, v2, v3)
+end;
+          <layout>fun cullTriangle (v1, v2, v3) =
+let
+   val {pos as pos1, col as col1} = v1
+   val {pos as pos2, col as col2} = v2
+   val {pos as pos3, col as col3} = v3
+   val vec1 = vecSub(pos1, pos2)
+   val vec2 = vecSub(pos1, pos3)
+   val vec3 = vecCross(vec1, vec2)
+   val cameraVec = {x=0.0, y=0.0, z=(~1.0), w=0.0}
+in
+   if vecDot(vec3, cameraVec) &lt; 0.0 then empty else 1`(v1, v2, v3)
+end;</layout>
         </ml>
       </block>
     </globbox>
@@ -441,8 +547,64 @@ vertices</text>
                 version="4.0.1">MATRIX</text>
         </type>
         <initmark id="ID1412394923">
-          <posattr x="-134.000000"
-                   y="317.000000"/>
+          <posattr x="-89.500000"
+                   y="354.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">(1.0, 0.0, 0.0, 0.0,
+0.0, 1.0, 0.0, 0.0,
+0.0, 0.0, 1.0, 0.0,
+0.0, 0.0, 0.0, 1.0)</text>
+        </initmark>
+      </place>
+      <place id="ID1412399981">
+        <posattr x="-150.000000"
+                 y="-126.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <text>Culled
+triangles</text>
+        <ellipse w="82.000000"
+                 h="40.000000"/>
+        <token x="-10.000000"
+               y="0.000000"/>
+        <marking x="0.000000"
+                 y="0.000000"
+                 hidden="false">
+          <snap snap_id="0"
+                anchor.horizontal="0"
+                anchor.vertical="0"/>
+        </marking>
+        <type id="ID1412399982">
+          <posattr x="-87.500000"
+                   y="-149.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">TRIANGLE</text>
+        </type>
+        <initmark id="ID1412399983">
+          <posattr x="-86.000000"
+                   y="-102.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -759,6 +921,80 @@ assembly</text>
         <priority id="ID1412387428">
           <posattr x="-74.000000"
                    y="-48.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"/>
+        </priority>
+      </trans>
+      <trans id="ID1412397811"
+             explicit="false">
+        <posattr x="-378.000000"
+                 y="-126.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <text>Face culling</text>
+        <box w="86.000000"
+             h="40.000000"/>
+        <binding x="7.200000"
+                 y="-3.000000"/>
+        <cond id="ID1412397812">
+          <posattr x="-430.000000"
+                   y="-95.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"/>
+        </cond>
+        <time id="ID1412397813">
+          <posattr x="-320.500000"
+                   y="-95.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"/>
+        </time>
+        <code id="ID1412397814">
+          <posattr x="-300.500000"
+                   y="-178.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"/>
+        </code>
+        <priority id="ID1412397816">
+          <posattr x="-459.000000"
+                   y="-157.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1130,6 +1366,83 @@ assembly</text>
                 version="4.0.1">matrix</text>
         </annot>
       </arc>
+      <arc id="ID1412399104"
+           orientation="PtoT"
+           order="1">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412397811"/>
+        <placeend idref="ID1412392124"/>
+        <bendpoint id="ID1412399106"
+                   serial="1">
+          <posattr x="-368.000000"
+                   y="-42.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+        </bendpoint>
+        <annot id="ID1412399105">
+          <posattr x="-340.000000"
+                   y="-74.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">triangle</text>
+        </annot>
+      </arc>
+      <arc id="ID1412400424"
+           orientation="TtoP"
+           order="1">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412397811"/>
+        <placeend idref="ID1412399981"/>
+        <annot id="ID1412400425">
+          <posattr x="-262.000000"
+                   y="-115.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">cullTriangle(triangle)</text>
+        </annot>
+      </arc>
       <constraints/>
     </page>
     <page id="ID6">
@@ -1469,7 +1782,7 @@ assembly</text>
         <transend idref="ID1412367969"/>
         <placeend idref="ID1412368159"/>
         <annot id="ID1412368266">
-          <posattr x="65.500000"
+          <posattr x="68.500000"
                    y="142.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -1480,10 +1793,10 @@ assembly</text>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">{x=uniform(0.0, 1.0),
- y=uniform(0.0, 1.0),
- z=uniform(0.0, 1.0),
- w=uniform(0.0, 1.0)}</text>
+                version="4.0.1">{x=uniform(~5.0, 5.0),
+ y=uniform(~5.0, 5.0),
+ z=uniform(~5.0, 5.0),
+ w=0.0}</text>
         </annot>
       </arc>
       <arc id="ID1412368327"
@@ -1504,7 +1817,7 @@ assembly</text>
         <transend idref="ID1412367969"/>
         <placeend idref="ID1412368074"/>
         <annot id="ID1412368328">
-          <posattr x="-271.500000"
+          <posattr x="-274.500000"
                    y="168.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -1515,10 +1828,10 @@ assembly</text>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">{x=uniform(0.0, 1.0),
- y=uniform(0.0, 1.0),
- z=uniform(0.0, 1.0),
- w=uniform(0.0, 1.0)}</text>
+                version="4.0.1">{x=uniform(~5.0, 5.0),
+ y=uniform(~5.0, 5.0),
+ z=uniform(~5.0, 5.0),
+ w=1.0}</text>
         </annot>
       </arc>
       <arc id="ID1412369879"
@@ -1947,18 +2260,9 @@ assembly</text>
       <cpnbinder id="ID2222"
                  x="626"
                  y="86"
-                 width="1013"
-                 height="664">
+                 width="1080"
+                 height="804">
         <sheets>
-          <cpnsheet id="ID2215"
-                    panx="-6.000000"
-                    pany="-5.000000"
-                    zoom="1.000000"
-                    instance="ID2149">
-            <zorder>
-              <position value="0"/>
-            </zorder>
-          </cpnsheet>
           <cpnsheet id="ID1412371773"
                     panx="1.000000"
                     pany="3.000000"
@@ -1968,10 +2272,17 @@ assembly</text>
               <position value="0"/>
             </zorder>
           </cpnsheet>
+          <textsheet id="ID1412409876"
+                     panx="7.000000"
+                     pany="20.000000"
+                     zoom="1.000000"
+                     decl="ID1412404512">
+            <zorder/>
+          </textsheet>
         </sheets>
         <zorder>
-          <position value="0"/>
           <position value="1"/>
+          <position value="0"/>
         </zorder>
       </cpnbinder>
     </binders>
@@ -2064,10 +2375,6 @@ assembly</text>
           <IndexNode expanded="false"/>
           <IndexNode expanded="false"/>
           <IndexNode expanded="false"/>
-          <IndexNode expanded="false"/>
-          <IndexNode expanded="false"/>
-          <IndexNode expanded="false"/>
-          <IndexNode expanded="false"/>
           <IndexNode expanded="true"/>
           <IndexNode expanded="false"/>
           <IndexNode expanded="false"/>
@@ -2081,7 +2388,17 @@ assembly</text>
           <IndexNode expanded="false"/>
           <IndexNode expanded="false"/>
           <IndexNode expanded="false"/>
-          <IndexNode expanded="true"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
         </IndexNode>
       </IndexNode>
       <IndexNode expanded="false"/>
