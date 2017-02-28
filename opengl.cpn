@@ -53,6 +53,9 @@
           <id>STRING</id>
           <string/>
         </color>
+        <ml id="ID1412498749">val MAX_VERTICES = 30;
+          <layout>val MAX_VERTICES = 30;</layout>
+        </ml>
         <color id="ID1412342955">
           <id>POINT</id>
           <record>
@@ -116,6 +119,14 @@
             <id>VERTEX</id>
           </list>
           <layout>colset VERTEX_LIST = list VERTEX;</layout>
+        </color>
+        <color id="ID1412493167">
+          <id>TIMEDVERTEX</id>
+          <timed/>
+          <alias>
+            <id>VERTEX</id>
+          </alias>
+          <layout>colset TIMEDVERTEX = VERTEX timed;</layout>
         </color>
         <var id="ID1412361843">
           <type>
@@ -186,7 +197,56 @@
           <id>triangle</id>
           <layout>var triangle : TRIANGLE;</layout>
         </var>
-        <ml id="ID1412433038">fun vecSub (p1, p2) =
+        <color id="ID1412564689">
+          <id>VERTEX_TIMESTAMP</id>
+          <product>
+            <id>VERTEX</id>
+            <id>INTINF</id>
+          </product>
+          <layout>colset VERTEX_TIMESTAMP = product VERTEX * INTINF;</layout>
+        </color>
+        <var id="ID1412587531">
+          <type>
+            <id>VERTEX_TIMESTAMP</id>
+          </type>
+          <id>vertex_timestamp</id>
+          <layout>var vertex_timestamp : VERTEX_TIMESTAMP;</layout>
+        </var>
+        <color id="ID1412502972">
+          <id>TIMEDUNIT</id>
+          <timed/>
+          <unit/>
+          <layout>colset TIMEDUNIT = unit timed;</layout>
+        </color>
+        <color id="ID1412505900">
+          <id>VERTEX_TIME_LIST</id>
+          <list>
+            <id>VERTEX_TIMESTAMP</id>
+          </list>
+          <layout>colset VERTEX_TIME_LIST = list VERTEX_TIMESTAMP;</layout>
+        </color>
+        <var id="ID1412495578">
+          <type>
+            <id>VERTEX_TIME_LIST</id>
+          </type>
+          <id>startVertex</id>
+          <layout>var startVertex : VERTEX_TIME_LIST;</layout>
+        </var>
+        <var id="ID1412495992">
+          <type>
+            <id>VERTEX_TIME_LIST</id>
+          </type>
+          <id>stopVertex</id>
+          <layout>var stopVertex : VERTEX_TIME_LIST;</layout>
+        </var>
+        <var id="ID1412570870">
+          <type>
+            <id>VERTEX_TIME_LIST</id>
+          </type>
+          <id>timelist</id>
+          <layout>var timelist : VERTEX_TIME_LIST;</layout>
+        </var>
+        <ml id="ID1412433038">fun vecSub p1 p2 =
 let
    val {x as x1, y as y1, z as z1, w as w1} = p1
    val {x as x2, y as y2, z as z2, w as w2} = p2
@@ -198,7 +258,7 @@ let
 in
   result
 end;
-          <layout>fun vecSub (p1, p2) =
+          <layout>fun vecSub p1 p2 =
 let
    val {x as x1, y as y1, z as z1, w as w1} = p1
    val {x as x2, y as y2, z as z2, w as w2} = p2
@@ -211,7 +271,7 @@ in
   result
 end;</layout>
         </ml>
-        <ml id="ID1412436211">fun vecCross (p1, p2) = 
+        <ml id="ID1412436211">fun vecCross p1 p2 = 
 let
    val {x as x1, y as y1, z as z1, w as w1} = p1
    val {x as x2, y as y2, z as z2, w as w2} = p2
@@ -222,7 +282,7 @@ let
 in
    result
 end;
-          <layout>fun vecCross (p1, p2) = 
+          <layout>fun vecCross p1 p2 = 
 let
    val {x as x1, y as y1, z as z1, w as w1} = p1
    val {x as x2, y as y2, z as z2, w as w2} = p2
@@ -250,7 +310,7 @@ in
    {x=(x/len), y=(y/len), z=(z/len), w=0.0}
 end;</layout>
         </ml>
-        <ml id="ID1412440781">fun vecDot (p1, p2) =
+        <ml id="ID1412440781">fun vecDot p1 p2 =
 let
    val {x as x1, y as y1, z as z1, w as w1} = p1
    val {x as x2, y as y2, z as z2, w as w2} = p2
@@ -258,7 +318,7 @@ let
 in
    result + 0.0
 end;
-          <layout>fun vecDot (p1, p2) =
+          <layout>fun vecDot p1 p2 =
 let
    val {x as x1, y as y1, z as z1, w as w1} = p1
    val {x as x2, y as y2, z as z2, w as w2} = p2
@@ -275,24 +335,24 @@ let
    val {pos as pos1, col as col1} = v1
    val {pos as pos2, col as col2} = v2
    val {pos as pos3, col as col3} = v3
-   val vec1 = vecSub(pos1, pos2)
-   val vec2 = vecSub(pos1, pos3)
-   val vec3 = vecCross(vec1, vec2)
+   val vec1 = vecSub pos1 pos2
+   val vec2 = vecSub pos1 pos3
+   val vec3 = vecCross vec1 vec2
    val cameraVec = {x=0.0, y=0.0, z=(~1.0), w=0.0}
 in
-   if vecDot(vec3, cameraVec) &lt; 0.0 then empty else 1`(v1, v2, v3)
+   if vecDot vec3 cameraVec &lt; 0.0 then empty else 1`(v1, v2, v3)
 end;
           <layout>fun cullTriangle (v1, v2, v3) =
 let
    val {pos as pos1, col as col1} = v1
    val {pos as pos2, col as col2} = v2
    val {pos as pos3, col as col3} = v3
-   val vec1 = vecSub(pos1, pos2)
-   val vec2 = vecSub(pos1, pos3)
-   val vec3 = vecCross(vec1, vec2)
+   val vec1 = vecSub pos1 pos2
+   val vec2 = vecSub pos1 pos3
+   val vec3 = vecCross vec1 vec2
    val cameraVec = {x=0.0, y=0.0, z=(~1.0), w=0.0}
 in
-   if vecDot(vec3, cameraVec) &lt; 0.0 then empty else 1`(v1, v2, v3)
+   if vecDot vec3 cameraVec &lt; 0.0 then empty else 1`(v1, v2, v3)
 end;</layout>
         </ml>
       </block>
@@ -300,7 +360,7 @@ end;</layout>
     <page id="ID1412371473">
       <pageattr name="Pipeline"/>
       <place id="ID1412372092">
-        <posattr x="-399.000000"
+        <posattr x="-504.000000"
                  y="114.000000"/>
         <fillattr colour="White"
                   pattern=""
@@ -323,7 +383,7 @@ end;</layout>
                 anchor.vertical="0"/>
         </marking>
         <type id="ID1412372093">
-          <posattr x="-346.500000"
+          <posattr x="-432.000000"
                    y="86.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -334,10 +394,10 @@ end;</layout>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">VERTEX</text>
+                version="4.0.1">TIMEDVERTEX</text>
         </type>
         <initmark id="ID1412372094">
-          <posattr x="-338.000000"
+          <posattr x="-443.000000"
                    y="141.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -352,7 +412,7 @@ end;</layout>
         </initmark>
       </place>
       <place id="ID1412377503">
-        <posattr x="-23.000000"
+        <posattr x="-16.000000"
                  y="114.000000"/>
         <fillattr colour="White"
                   pattern=""
@@ -368,15 +428,15 @@ vertices</text>
                  h="56.000000"/>
         <token x="-10.000000"
                y="0.000000"/>
-        <marking x="0.000000"
-                 y="0.000000"
+        <marking x="200.000000"
+                 y="63.000000"
                  hidden="false">
           <snap snap_id="0"
-                anchor.horizontal="0"
-                anchor.vertical="0"/>
+                anchor.horizontal="1"
+                anchor.vertical="2"/>
         </marking>
         <type id="ID1412377504">
-          <posattr x="38.500000"
+          <posattr x="65.000000"
                    y="84.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -387,10 +447,10 @@ vertices</text>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">VERTEX</text>
+                version="4.0.1">TIMEDVERTEX</text>
         </type>
         <initmark id="ID1412377505">
-          <posattr x="47.000000"
+          <posattr x="54.000000"
                    y="143.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -510,8 +570,8 @@ vertices</text>
         </initmark>
       </place>
       <place id="ID1412394921">
-        <posattr x="-191.000000"
-                 y="294.000000"/>
+        <posattr x="-294.000000"
+                 y="315.000000"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
@@ -525,16 +585,16 @@ vertices</text>
                  h="40.000000"/>
         <token x="-10.000000"
                y="0.000000"/>
-        <marking x="0.000000"
-                 y="0.000000"
+        <marking x="-43.000000"
+                 y="56.000000"
                  hidden="false">
           <snap snap_id="0"
-                anchor.horizontal="0"
-                anchor.vertical="0"/>
+                anchor.horizontal="2"
+                anchor.vertical="2"/>
         </marking>
         <type id="ID1412394922">
-          <posattr x="-143.000000"
-                   y="270.000000"/>
+          <posattr x="-246.000000"
+                   y="291.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -547,8 +607,8 @@ vertices</text>
                 version="4.0.1">MATRIX</text>
         </type>
         <initmark id="ID1412394923">
-          <posattr x="-89.500000"
-                   y="354.000000"/>
+          <posattr x="-213.500000"
+                   y="369.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -617,16 +677,172 @@ triangles</text>
                 version="4.0.1"/>
         </initmark>
       </place>
-      <trans id="ID1412372914"
-             explicit="false">
-        <posattr x="-399.000000"
-                 y="234.000000"/>
+      <place id="ID1412492815">
+        <posattr x="-42.000000"
+                 y="252.000000"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
         <lineattr colour="Black"
                   thick="1"
                   type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <text>Start</text>
+        <ellipse w="60.000000"
+                 h="40.000000"/>
+        <token x="-10.000000"
+               y="0.000000"/>
+        <marking x="0.000000"
+                 y="0.000000"
+                 hidden="false">
+          <snap snap_id="0"
+                anchor.horizontal="0"
+                anchor.vertical="0"/>
+        </marking>
+        <type id="ID1412492816">
+          <posattr x="43.000000"
+                   y="228.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">VERTEX_TIME_LIST</text>
+        </type>
+        <initmark id="ID1412492817">
+          <posattr x="10.000000"
+                   y="277.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">[]</text>
+        </initmark>
+      </place>
+      <place id="ID1412493713">
+        <posattr x="188.000000"
+                 y="252.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <text>Stop</text>
+        <ellipse w="60.000000"
+                 h="40.000000"/>
+        <token x="-10.000000"
+               y="0.000000"/>
+        <marking x="0.000000"
+                 y="0.000000"
+                 hidden="false">
+          <snap snap_id="0"
+                anchor.horizontal="0"
+                anchor.vertical="0"/>
+        </marking>
+        <type id="ID1412493714">
+          <posattr x="272.000000"
+                   y="228.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">VERTEX_TIME_LIST</text>
+        </type>
+        <initmark id="ID1412493715">
+          <posattr x="217.000000"
+                   y="275.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">[]</text>
+        </initmark>
+      </place>
+      <place id="ID1412494614">
+        <posattr x="54.000000"
+                 y="504.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <text></text>
+        <ellipse w="60.000000"
+                 h="40.000000"/>
+        <token x="-10.000000"
+               y="0.000000"/>
+        <marking x="0.000000"
+                 y="0.000000"
+                 hidden="false">
+          <snap snap_id="0"
+                anchor.horizontal="0"
+                anchor.vertical="0"/>
+        </marking>
+        <type id="ID1412494615">
+          <posattr x="141.000000"
+                   y="480.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">VERTEX_TIMESTAMP</text>
+        </type>
+        <initmark id="ID1412494616">
+          <posattr x="110.000000"
+                   y="527.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"/>
+        </initmark>
+      </place>
+      <trans id="ID1412372914"
+             explicit="false">
+        <posattr x="-504.000000"
+                 y="252.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="solid"/>
         <textattr colour="Black"
                   bold="false"/>
         <text>Vertex
@@ -637,8 +853,8 @@ generator</text>
                portsock="(ID1412369654,ID1412372092)">
           <subpageinfo id="ID1412375420"
                        name="VertexGenerator">
-            <posattr x="-440.000000"
-                     y="210.000000"/>
+            <posattr x="-545.000000"
+                     y="228.000000"/>
             <fillattr colour="White"
                       pattern="Solid"
                       filled="false"/>
@@ -652,8 +868,8 @@ generator</text>
         <binding x="7.200000"
                  y="-3.000000"/>
         <cond id="ID1412372915">
-          <posattr x="-445.000000"
-                   y="265.000000"/>
+          <posattr x="-550.000000"
+                   y="283.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -666,8 +882,8 @@ generator</text>
                 version="4.0.1"/>
         </cond>
         <time id="ID1412372916">
-          <posattr x="-347.500000"
-                   y="265.000000"/>
+          <posattr x="-452.500000"
+                   y="283.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -680,8 +896,8 @@ generator</text>
                 version="4.0.1"/>
         </time>
         <code id="ID1412372917">
-          <posattr x="-327.500000"
-                   y="182.000000"/>
+          <posattr x="-432.500000"
+                   y="200.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -694,8 +910,8 @@ generator</text>
                 version="4.0.1"/>
         </code>
         <priority id="ID1412372919">
-          <posattr x="-474.000000"
-                   y="203.000000"/>
+          <posattr x="-579.000000"
+                   y="221.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -710,14 +926,14 @@ generator</text>
       </trans>
       <trans id="ID1412375895"
              explicit="false">
-        <posattr x="-191.000000"
+        <posattr x="-294.000000"
                  y="114.000000"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
         <lineattr colour="Black"
                   thick="1"
-                  type="Solid"/>
+                  type="solid"/>
         <textattr colour="Black"
                   bold="false"/>
         <text>Vertex
@@ -727,7 +943,7 @@ shader</text>
         <binding x="7.200000"
                  y="-3.000000"/>
         <cond id="ID1412375896">
-          <posattr x="-230.000000"
+          <posattr x="-333.000000"
                    y="145.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -741,7 +957,7 @@ shader</text>
                 version="4.0.1"/>
         </cond>
         <time id="ID1412375897">
-          <posattr x="-146.500000"
+          <posattr x="-249.500000"
                    y="145.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -755,7 +971,7 @@ shader</text>
                 version="4.0.1"/>
         </time>
         <code id="ID1412375898">
-          <posattr x="-126.500000"
+          <posattr x="-229.500000"
                    y="62.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -769,7 +985,7 @@ shader</text>
                 version="4.0.1"/>
         </code>
         <priority id="ID1412375900">
-          <posattr x="-259.000000"
+          <posattr x="-362.000000"
                    y="83.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -792,7 +1008,7 @@ shader</text>
                   filled="false"/>
         <lineattr colour="Black"
                   thick="1"
-                  type="Solid"/>
+                  type="solid"/>
         <textattr colour="Black"
                   bold="false"/>
         <text>Vertex
@@ -867,7 +1083,7 @@ gather</text>
                   filled="false"/>
         <lineattr colour="Black"
                   thick="1"
-                  type="Solid"/>
+                  type="solid"/>
         <textattr colour="Black"
                   bold="false"/>
         <text>Primitive
@@ -942,7 +1158,7 @@ assembly</text>
                   filled="false"/>
         <lineattr colour="Black"
                   thick="1"
-                  type="Solid"/>
+                  type="solid"/>
         <textattr colour="Black"
                   bold="false"/>
         <text>Face culling</text>
@@ -1007,6 +1223,89 @@ assembly</text>
                 version="4.0.1"/>
         </priority>
       </trans>
+      <trans id="ID1412494396"
+             explicit="false">
+        <posattr x="54.000000"
+                 y="336.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <text>Time</text>
+        <box w="60.000000"
+             h="40.000000"/>
+        <binding x="7.200000"
+                 y="-3.000000"/>
+        <cond id="ID1412494397">
+          <posattr x="-66.500000"
+                   y="424.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">[length startVertex &gt; 0 andalso
+length stopVertex &gt; 0]</text>
+        </cond>
+        <time id="ID1412494398">
+          <posattr x="98.500000"
+                   y="367.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"/>
+        </time>
+        <code id="ID1412494399">
+          <posattr x="321.000000"
+                   y="444.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">input (startVertex, stopVertex);
+output (vertex_timestamp);
+action
+let
+   val (v, startT) = hd startVertex
+   val (v, stopT) = hd stopVertex
+in
+   (v, stopT - startT)
+end;</text>
+        </code>
+        <priority id="ID1412494401">
+          <posattr x="-14.000000"
+                   y="305.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"/>
+        </priority>
+      </trans>
       <arc id="ID1412374015"
            orientation="TtoP"
            order="1">
@@ -1025,8 +1324,8 @@ assembly</text>
         <transend idref="ID1412372914"/>
         <placeend idref="ID1412372092"/>
         <annot id="ID1412374016">
-          <posattr x="-375.000000"
-                   y="176.000000"/>
+          <posattr x="-465.500000"
+                   y="185.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1036,7 +1335,7 @@ assembly</text>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">vertex</text>
+                version="4.0.1">vertex@+1</text>
         </annot>
       </arc>
       <arc id="ID1412376120"
@@ -1057,7 +1356,7 @@ assembly</text>
         <transend idref="ID1412375895"/>
         <placeend idref="ID1412372092"/>
         <annot id="ID1412376121">
-          <posattr x="-292.000000"
+          <posattr x="-396.000000"
                    y="125.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -1068,7 +1367,7 @@ assembly</text>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">vertex</text>
+                version="4.0.1">vertex@+1</text>
         </annot>
       </arc>
       <arc id="ID1412377748"
@@ -1089,7 +1388,7 @@ assembly</text>
         <transend idref="ID1412375895"/>
         <placeend idref="ID1412377503"/>
         <annot id="ID1412377749">
-          <posattr x="-117.000000"
+          <posattr x="-165.000000"
                    y="125.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -1100,7 +1399,7 @@ assembly</text>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">vertex</text>
+                version="4.0.1">vertex@+discrete(3, 6)</text>
         </annot>
       </arc>
       <arc id="ID1412381719"
@@ -1153,7 +1452,7 @@ assembly</text>
         <transend idref="ID1412379771"/>
         <placeend idref="ID1412377503"/>
         <annot id="ID1412383809">
-          <posattr x="88.000000"
+          <posattr x="92.000000"
                    y="125.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -1164,7 +1463,7 @@ assembly</text>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">vertex</text>
+                version="4.0.1">vertex@+2</text>
         </annot>
       </arc>
       <arc id="ID1412384438"
@@ -1352,8 +1651,8 @@ assembly</text>
         <transend idref="ID1412375895"/>
         <placeend idref="ID1412394921"/>
         <annot id="ID1412396149">
-          <posattr x="-167.500000"
-                   y="204.000000"/>
+          <posattr x="-270.500000"
+                   y="215.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1441,6 +1740,348 @@ assembly</text>
                     bold="false"/>
           <text tool="CPN Tools"
                 version="4.0.1">cullTriangle(triangle)</text>
+        </annot>
+      </arc>
+      <arc id="ID1412492829"
+           orientation="TtoP"
+           order="2">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412375895"/>
+        <placeend idref="ID1412492815"/>
+        <annot id="ID1412492830">
+          <posattr x="-112.500000"
+                   y="166.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">timelist ^^
+[(vertex, time())]</text>
+        </annot>
+      </arc>
+      <arc id="ID1412493793"
+           orientation="TtoP"
+           order="2">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412379771"/>
+        <placeend idref="ID1412493713"/>
+        <annot id="ID1412493794">
+          <posattr x="265.500000"
+                   y="184.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">timelist ^^
+[(vertex, time())]</text>
+        </annot>
+      </arc>
+      <arc id="ID1412494724"
+           orientation="TtoP"
+           order="1">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412494396"/>
+        <placeend idref="ID1412494614"/>
+        <annot id="ID1412494725">
+          <posattr x="115.000000"
+                   y="420.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">vertex_timestamp</text>
+        </annot>
+      </arc>
+      <arc id="ID1412494955"
+           orientation="PtoT"
+           order="2">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412494396"/>
+        <placeend idref="ID1412492815"/>
+        <annot id="ID1412494956">
+          <posattr x="-30.500000"
+                   y="306.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">startVertex</text>
+        </annot>
+      </arc>
+      <arc id="ID1412495196"
+           orientation="PtoT"
+           order="2">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412494396"/>
+        <placeend idref="ID1412493713"/>
+        <annot id="ID1412495197">
+          <posattr x="154.500000"
+                   y="306.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">stopVertex</text>
+        </annot>
+      </arc>
+      <arc id="ID1412507637"
+           orientation="PtoT"
+           order="1">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412375895"/>
+        <placeend idref="ID1412492815"/>
+        <bendpoint id="ID1412507639"
+                   serial="1">
+          <posattr x="-226.000000"
+                   y="225.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+        </bendpoint>
+        <annot id="ID1412507638">
+          <posattr x="-213.500000"
+                   y="241.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">timelist</text>
+        </annot>
+      </arc>
+      <arc id="ID1412510758"
+           orientation="PtoT"
+           order="1">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412379771"/>
+        <placeend idref="ID1412493713"/>
+        <bendpoint id="ID1412510760"
+                   serial="1">
+          <posattr x="126.000000"
+                   y="198.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+        </bendpoint>
+        <annot id="ID1412510759">
+          <posattr x="109.500000"
+                   y="176.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">timelist</text>
+        </annot>
+      </arc>
+      <arc id="ID1412512092"
+           orientation="TtoP"
+           order="1">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412494396"/>
+        <placeend idref="ID1412492815"/>
+        <bendpoint id="ID1412512094"
+                   serial="1">
+          <posattr x="-84.000000"
+                   y="336.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+        </bendpoint>
+        <annot id="ID1412512093">
+          <posattr x="-30.000000"
+                   y="347.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">tl startVertex</text>
+        </annot>
+      </arc>
+      <arc id="ID1412513129"
+           orientation="TtoP"
+           order="1">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412494396"/>
+        <placeend idref="ID1412493713"/>
+        <bendpoint id="ID1412513131"
+                   serial="1">
+          <posattr x="231.000000"
+                   y="349.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+        </bendpoint>
+        <annot id="ID1412513130">
+          <posattr x="158.000000"
+                   y="360.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">tl stopVertex</text>
         </annot>
       </arc>
       <constraints/>
@@ -1575,7 +2216,7 @@ assembly</text>
                 anchor.vertical="0"/>
         </marking>
         <type id="ID1412369655">
-          <posattr x="-35.500000"
+          <posattr x="-16.000000"
                    y="-191.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -1586,7 +2227,7 @@ assembly</text>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">VERTEX</text>
+                version="4.0.1">TIMEDVERTEX</text>
         </type>
         <initmark id="ID1412369656">
           <posattr x="-27.000000"
@@ -1616,6 +2257,110 @@ assembly</text>
                     bold="false"/>
         </port>
       </place>
+      <place id="ID1412499534">
+        <posattr x="-110.000000"
+                 y="316.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <text>MaxVertices</text>
+        <ellipse w="92.000000"
+                 h="40.000000"/>
+        <token x="-13.000000"
+               y="0.000000"/>
+        <marking x="0.000000"
+                 y="0.000000"
+                 hidden="false">
+          <snap snap_id="0"
+                anchor.horizontal="0"
+                anchor.vertical="0"/>
+        </marking>
+        <type id="ID1412499535">
+          <posattr x="-59.000000"
+                   y="292.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">UNIT</text>
+        </type>
+        <initmark id="ID1412499536">
+          <posattr x="-17.500000"
+                   y="339.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">MAX_VERTICES`()</text>
+        </initmark>
+      </place>
+      <place id="ID1412501997">
+        <posattr x="54.000000"
+                 y="268.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <text></text>
+        <ellipse w="60.000000"
+                 h="40.000000"/>
+        <token x="-10.000000"
+               y="0.000000"/>
+        <marking x="0.000000"
+                 y="0.000000"
+                 hidden="false">
+          <snap snap_id="0"
+                anchor.horizontal="0"
+                anchor.vertical="0"/>
+        </marking>
+        <type id="ID1412501998">
+          <posattr x="112.500000"
+                   y="244.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">TIMEDUNIT</text>
+        </type>
+        <initmark id="ID1412501999">
+          <posattr x="91.000000"
+                   y="291.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">1`()</text>
+        </initmark>
+      </place>
       <trans id="ID1412367969"
              explicit="false">
         <posattr x="-72.000000"
@@ -1625,7 +2370,7 @@ assembly</text>
                   filled="false"/>
         <lineattr colour="Black"
                   thick="1"
-                  type="Solid"/>
+                  type="solid"/>
         <textattr colour="Black"
                   bold="false"/>
         <text>Generator</text>
@@ -1699,7 +2444,7 @@ assembly</text>
                   filled="false"/>
         <lineattr colour="Black"
                   thick="1"
-                  type="Solid"/>
+                  type="solid"/>
         <textattr colour="Black"
                   bold="false"/>
         <text>Join</text>
@@ -1975,6 +2720,128 @@ assembly</text>
                 version="4.0.1"/>
         </annot>
       </arc>
+      <arc id="ID1412501238"
+           orientation="PtoT"
+           order="1">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412367969"/>
+        <placeend idref="ID1412499534"/>
+        <bendpoint id="ID1412501240"
+                   serial="1">
+          <posattr x="-110.000000"
+                   y="238.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+        </bendpoint>
+        <annot id="ID1412501239">
+          <posattr x="-92.000000"
+                   y="220.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">1`()</text>
+        </annot>
+      </arc>
+      <arc id="ID1412502236"
+           orientation="TtoP"
+           order="2">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412367969"/>
+        <placeend idref="ID1412501997"/>
+        <annot id="ID1412502237">
+          <posattr x="-20.500000"
+                   y="242.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">()@+1</text>
+        </annot>
+      </arc>
+      <arc id="ID1412503229"
+           orientation="PtoT"
+           order="1">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412367969"/>
+        <placeend idref="ID1412501997"/>
+        <bendpoint id="ID1412503231"
+                   serial="1">
+          <posattr x="54.000000"
+                   y="210.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+        </bendpoint>
+        <annot id="ID1412503230">
+          <posattr x="19.000000"
+                   y="214.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">()</text>
+        </annot>
+      </arc>
       <constraints/>
     </page>
     <instances>
@@ -2005,27 +2872,7 @@ assembly</text>
           <text>&lt;same as model&gt;</text>
         </value>
       </option>
-      <option name="extensions.10006.enable">
-        <value>
-          <boolean>true</boolean>
-        </value>
-      </option>
-      <option name="extensions.10004.enable">
-        <value>
-          <boolean>true</boolean>
-        </value>
-      </option>
-      <option name="extensions.10002.enable">
-        <value>
-          <boolean>true</boolean>
-        </value>
-      </option>
       <option name="extensions.10003.enable">
-        <value>
-          <boolean>true</boolean>
-        </value>
-      </option>
-      <option name="extensions.10011.enable">
         <value>
           <boolean>true</boolean>
         </value>
@@ -2040,7 +2887,17 @@ assembly</text>
           <boolean>true</boolean>
         </value>
       </option>
-      <option name="extensions.10008.enable">
+      <option name="extensions.10006.enable">
+        <value>
+          <boolean>true</boolean>
+        </value>
+      </option>
+      <option name="extensions.10011.enable">
+        <value>
+          <boolean>true</boolean>
+        </value>
+      </option>
+      <option name="extensions.10002.enable">
         <value>
           <boolean>true</boolean>
         </value>
@@ -2050,12 +2907,22 @@ assembly</text>
           <boolean>true</boolean>
         </value>
       </option>
-      <option name="extensions.10011.options.disable">
+      <option name="extensions.10004.enable">
+        <value>
+          <boolean>true</boolean>
+        </value>
+      </option>
+      <option name="extensions.10008.enable">
+        <value>
+          <boolean>true</boolean>
+        </value>
+      </option>
+      <option name="extensions.10007.options.discover">
         <value>
           <boolean>false</boolean>
         </value>
       </option>
-      <option name="extensions.10007.options.discover">
+      <option name="extensions.10011.options.disable">
         <value>
           <boolean>false</boolean>
         </value>
@@ -2258,30 +3125,22 @@ assembly</text>
     </options>
     <binders>
       <cpnbinder id="ID2222"
-                 x="626"
-                 y="86"
-                 width="1080"
-                 height="804">
+                 x="253"
+                 y="35"
+                 width="1343"
+                 height="905">
         <sheets>
           <cpnsheet id="ID1412371773"
-                    panx="1.000000"
-                    pany="3.000000"
+                    panx="0.000000"
+                    pany="214.000000"
                     zoom="1.000000"
                     instance="ID1412371475">
             <zorder>
               <position value="0"/>
             </zorder>
           </cpnsheet>
-          <textsheet id="ID1412409876"
-                     panx="7.000000"
-                     pany="20.000000"
-                     zoom="1.000000"
-                     decl="ID1412404512">
-            <zorder/>
-          </textsheet>
         </sheets>
         <zorder>
-          <position value="1"/>
           <position value="0"/>
         </zorder>
       </cpnbinder>
@@ -2376,6 +3235,15 @@ assembly</text>
           <IndexNode expanded="false"/>
           <IndexNode expanded="false"/>
           <IndexNode expanded="true"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
           <IndexNode expanded="false"/>
           <IndexNode expanded="false"/>
           <IndexNode expanded="false"/>
