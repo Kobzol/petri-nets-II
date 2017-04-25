@@ -184,6 +184,13 @@
           <id>ip</id>
           <layout>var ip : INT;</layout>
         </var>
+        <var id="ID1414228124">
+          <type>
+            <id>INT</id>
+          </type>
+          <id>jumpIP</id>
+          <layout>var jumpIP: INT;</layout>
+        </var>
         <var id="ID1412889817">
           <type>
             <id>TCACHE_LIST</id>
@@ -225,6 +232,13 @@
           </type>
           <id>tinst_list</id>
           <layout>var tinst_list : TINST_LIST;</layout>
+        </var>
+        <var id="ID1414228505">
+          <type>
+            <id>TINST_LIST</id>
+          </type>
+          <id>output_tinst</id>
+          <layout>var output_tinst : TINST_LIST;</layout>
         </var>
         <var id="ID1412880089">
           <type>
@@ -278,12 +292,12 @@ in
   List.take(reglist, to) ^^ [value] ^^ List.drop(reglist, to + 1)
 end;</layout>
         </ml>
-        <ml id="ID1412975286">fun executeJump arg ip reglist =
-    if (length arg) = 1 orelse (List.nth(reglist, List.nth(arg, 1)) = 0) then List.nth(arg, 0)
-    else ip - 1
-          <layout>fun executeJump arg ip reglist =
-    if (length arg) = 1 orelse (List.nth(reglist, List.nth(arg, 1)) = 0) then List.nth(arg, 0)
-    else ip - 1</layout>
+        <ml id="ID1412975286">fun executeJump arg ip reglist tlist =
+    if (length arg) = 1 orelse (List.nth(reglist, List.nth(arg, 1)) = 0) then (List.nth(arg, 0), [])
+    else (ip, tlist)
+          <layout>fun executeJump arg ip reglist tlist =
+    if (length arg) = 1 orelse (List.nth(reglist, List.nth(arg, 1)) = 0) then (List.nth(arg, 0), [])
+    else (ip, tlist)</layout>
         </ml>
         <ml id="ID1412798608">fun add arg reglist =
 let
@@ -390,14 +404,14 @@ end;</layout>
         <text>Program</text>
         <ellipse w="60.000000"
                  h="40.000000"/>
-        <token x="-10.000000"
-               y="0.000000"/>
-        <marking x="-51.500000"
-                 y="53.000000"
+        <token x="-18.000000"
+               y="61.000000"/>
+        <marking x="-1.000000"
+                 y="0.000000"
                  hidden="false">
-          <snap snap_id="0"
-                anchor.horizontal="2"
-                anchor.vertical="2"/>
+          <snap snap_id="2"
+                anchor.horizontal="1"
+                anchor.vertical="3"/>
         </marking>
         <type id="ID1412624152">
           <posattr x="-623.500000"
@@ -414,8 +428,8 @@ end;</layout>
                 version="4.0.1">INSTRUCTION_LIST</text>
         </type>
         <initmark id="ID1412624153">
-          <posattr x="-443.500000"
-                   y="393.000000"/>
+          <posattr x="-659.500000"
+                   y="364.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -447,8 +461,8 @@ end;</layout>
         <text>IP</text>
         <ellipse w="60.000000"
                  h="40.000000"/>
-        <token x="-10.000000"
-               y="0.000000"/>
+        <token x="23.000000"
+               y="25.000000"/>
         <marking x="0.000000"
                  y="0.000000"
                  hidden="false">
@@ -499,14 +513,14 @@ end;</layout>
         <text>Fetched</text>
         <ellipse w="60.000000"
                  h="40.000000"/>
-        <token x="-10.000000"
-               y="0.000000"/>
-        <marking x="0.000000"
+        <token x="8.000000"
+               y="16.000000"/>
+        <marking x="-1.000000"
                  y="0.000000"
                  hidden="false">
-          <snap snap_id="0"
-                anchor.horizontal="0"
-                anchor.vertical="0"/>
+          <snap snap_id="2"
+                anchor.horizontal="1"
+                anchor.vertical="3"/>
         </marking>
         <type id="ID1412626038">
           <posattr x="-503.500000"
@@ -551,14 +565,14 @@ end;</layout>
         <text>Decoded</text>
         <ellipse w="60.000000"
                  h="40.000000"/>
-        <token x="-10.000000"
-               y="0.000000"/>
-        <marking x="7.000000"
-                 y="14.000000"
+        <token x="-16.000000"
+               y="68.000000"/>
+        <marking x="-1.000000"
+                 y="0.000000"
                  hidden="false">
-          <snap snap_id="0"
+          <snap snap_id="2"
                 anchor.horizontal="1"
-                anchor.vertical="2"/>
+                anchor.vertical="3"/>
         </marking>
         <type id="ID1412629703">
           <posattr x="-292.500000"
@@ -603,8 +617,8 @@ end;</layout>
         <text>Registers</text>
         <ellipse w="82.000000"
                  h="40.000000"/>
-        <token x="-10.000000"
-               y="0.000000"/>
+        <token x="8.000000"
+               y="1.000000"/>
         <marking x="0.000000"
                  y="0.000000"
                  hidden="false">
@@ -655,12 +669,12 @@ end;</layout>
         <text>Memory</text>
         <ellipse w="60.000000"
                  h="40.000000"/>
-        <token x="-10.000000"
-               y="0.000000"/>
-        <marking x="26.000000"
-                 y="1.000000"
+        <token x="4.000000"
+               y="3.000000"/>
+        <marking x="-1.000000"
+                 y="0.000000"
                  hidden="false">
-          <snap snap_id="0"
+          <snap snap_id="2"
                 anchor.horizontal="1"
                 anchor.vertical="3"/>
         </marking>
@@ -694,7 +708,7 @@ end;</layout>
         </initmark>
       </place>
       <place id="ID1412885075">
-        <posattr x="391.000000"
+        <posattr x="84.000000"
                  y="-476.000000"/>
         <fillattr colour="White"
                   pattern=""
@@ -707,7 +721,7 @@ end;</layout>
         <text>L1 cache</text>
         <ellipse w="60.000000"
                  h="40.000000"/>
-        <token x="-10.000000"
+        <token x="10.000000"
                y="0.000000"/>
         <marking x="-1.000000"
                  y="0.000000"
@@ -717,7 +731,7 @@ end;</layout>
                 anchor.vertical="3"/>
         </marking>
         <type id="ID1412885076">
-          <posattr x="457.500000"
+          <posattr x="150.500000"
                    y="-499.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -731,8 +745,8 @@ end;</layout>
                 version="4.0.1">TCACHE_LIST</text>
         </type>
         <initmark id="ID1412885077">
-          <posattr x="420.000000"
-                   y="-452.000000"/>
+          <posattr x="123.000000"
+                   y="-458.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -777,8 +791,8 @@ end;</layout>
                 version="4.0.1">[ip &gt;= 0 andalso ip &lt; length program]</text>
         </cond>
         <time id="ID1412624773">
-          <posattr x="-337.500000"
-                   y="206.000000"/>
+          <posattr x="-330.500000"
+                   y="192.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -896,7 +910,7 @@ end;</layout>
       <trans id="ID1412647488"
              explicit="false">
         <posattr x="42.000000"
-                 y="-42.000000"/>
+                 y="-28.000000"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
@@ -913,7 +927,7 @@ MOV</text>
                  y="-3.000000"/>
         <cond id="ID1413029967">
           <posattr x="3.000000"
-                   y="-11.000000"/>
+                   y="3.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -927,7 +941,7 @@ MOV</text>
         </cond>
         <time id="ID1412647490">
           <posattr x="130.500000"
-                   y="-22.000000"/>
+                   y="-8.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -941,7 +955,7 @@ MOV</text>
         </time>
         <code id="ID1412647491">
           <posattr x="106.500000"
-                   y="-94.000000"/>
+                   y="-80.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -955,7 +969,7 @@ MOV</text>
         </code>
         <priority id="ID1412647493">
           <posattr x="-26.000000"
-                   y="-73.000000"/>
+                   y="-59.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1015,18 +1029,21 @@ JUMP</text>
                 version="4.0.1">@+discrete(1, 4)</text>
         </time>
         <code id="ID1412652650">
-          <posattr x="-31.500000"
-                   y="74.000000"/>
+          <posattr x="238.500000"
+                   y="207.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
-          <lineattr colour="Teal"
+          <lineattr colour="Black"
                     thick="0"
                     type="Solid"/>
-          <textattr colour="Teal"
+          <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1"/>
+                version="4.0.1">input (arg, ip, treglist, tinst_list);
+output (jumpIP, output_tinst);
+action
+executeJump arg ip treglist tinst_list;</text>
         </code>
         <priority id="ID1412652652">
           <posattr x="-164.000000"
@@ -1205,7 +1222,7 @@ load mem treglist arg cache;</text>
                   filled="false"/>
         <lineattr colour="Teal"
                   thick="1"
-                  type="Solid"/>
+                  type="solid"/>
         <textattr colour="Teal"
                   bold="false"/>
         <text>EXECUTE
@@ -1272,7 +1289,7 @@ MUL</text>
         </priority>
       </trans>
       <arc id="ID1412624923"
-           orientation="PtoT"
+           orientation="BOTHDIR"
            order="1">
         <posattr x="0.000000"
                  y="0.000000"/>
@@ -1303,7 +1320,7 @@ MUL</text>
         </bendpoint>
         <annot id="ID1412624924">
           <posattr x="-450.500000"
-                   y="232.000000"/>
+                   y="248.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1361,51 +1378,6 @@ MUL</text>
                 version="4.0.1">ip</text>
         </annot>
       </arc>
-      <arc id="ID1412625820"
-           orientation="TtoP"
-           order="1">
-        <posattr x="0.000000"
-                 y="0.000000"/>
-        <fillattr colour="White"
-                  pattern=""
-                  filled="false"/>
-        <lineattr colour="Blue"
-                  thick="1"
-                  type="Solid"/>
-        <textattr colour="Blue"
-                  bold="false"/>
-        <arrowattr headsize="1.200000"
-                   currentcyckle="2"/>
-        <transend idref="ID1412624771"/>
-        <placeend idref="ID1412624151"/>
-        <bendpoint id="ID1412625822"
-                   serial="1">
-          <posattr x="-546.000000"
-                   y="168.000000"/>
-          <fillattr colour="White"
-                    pattern="Solid"
-                    filled="false"/>
-          <lineattr colour="Black"
-                    thick="0"
-                    type="Solid"/>
-          <textattr colour="Black"
-                    bold="false"/>
-        </bendpoint>
-        <annot id="ID1412625821">
-          <posattr x="-488.000000"
-                   y="179.000000"/>
-          <fillattr colour="White"
-                    pattern="Solid"
-                    filled="false"/>
-          <lineattr colour="Black"
-                    thick="0"
-                    type="Solid"/>
-          <textattr colour="Black"
-                    bold="false"/>
-          <text tool="CPN Tools"
-                version="4.0.1">program</text>
-        </annot>
-      </arc>
       <arc id="ID1412626150"
            orientation="TtoP"
            order="2">
@@ -1457,8 +1429,8 @@ MUL</text>
         <placeend idref="ID1412624589"/>
         <bendpoint id="ID1412626387"
                    serial="1">
-          <posattr x="-223.000000"
-                   y="168.000000"/>
+          <posattr x="-392.000000"
+                   y="294.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1469,8 +1441,8 @@ MUL</text>
                     bold="false"/>
         </bendpoint>
         <annot id="ID1412626386">
-          <posattr x="-307.000000"
-                   y="179.000000"/>
+          <posattr x="-370.000000"
+                   y="242.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1565,8 +1537,8 @@ MUL</text>
         <transend idref="ID1412647488"/>
         <placeend idref="ID1412629702"/>
         <annot id="ID1412648638">
-          <posattr x="35.500000"
-                   y="-111.000000"/>
+          <posattr x="41.500000"
+                   y="-99.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1682,77 +1654,6 @@ MUL</text>
                 version="4.0.1">ip</text>
         </annot>
       </arc>
-      <arc id="ID1412667468"
-           orientation="TtoP"
-           order="1">
-        <posattr x="0.000000"
-                 y="0.000000"/>
-        <fillattr colour="White"
-                  pattern=""
-                  filled="false"/>
-        <lineattr colour="Blue"
-                  thick="1"
-                  type="Solid"/>
-        <textattr colour="Blue"
-                  bold="false"/>
-        <arrowattr headsize="1.200000"
-                   currentcyckle="2"/>
-        <transend idref="ID1412652647"/>
-        <placeend idref="ID1412624589"/>
-        <bendpoint id="ID1412667470"
-                   serial="1">
-          <posattr x="42.000000"
-                   y="107.000000"/>
-          <fillattr colour="White"
-                    pattern="Solid"
-                    filled="false"/>
-          <lineattr colour="Black"
-                    thick="0"
-                    type="Solid"/>
-          <textattr colour="Black"
-                    bold="false"/>
-        </bendpoint>
-        <bendpoint id="ID1412667471"
-                   serial="2">
-          <posattr x="42.000000"
-                   y="378.000000"/>
-          <fillattr colour="White"
-                    pattern="Solid"
-                    filled="false"/>
-          <lineattr colour="Black"
-                    thick="0"
-                    type="Solid"/>
-          <textattr colour="Black"
-                    bold="false"/>
-        </bendpoint>
-        <bendpoint id="ID1412667472"
-                   serial="3">
-          <posattr x="-210.000000"
-                   y="378.000000"/>
-          <fillattr colour="White"
-                    pattern="Solid"
-                    filled="false"/>
-          <lineattr colour="Black"
-                    thick="0"
-                    type="Solid"/>
-          <textattr colour="Black"
-                    bold="false"/>
-        </bendpoint>
-        <annot id="ID1412667469">
-          <posattr x="131.000000"
-                   y="234.000000"/>
-          <fillattr colour="White"
-                    pattern="Solid"
-                    filled="false"/>
-          <lineattr colour="Black"
-                    thick="0"
-                    type="Solid"/>
-          <textattr colour="Black"
-                    bold="false"/>
-          <text tool="CPN Tools"
-                version="4.0.1">executeJump arg ip treglist</text>
-        </annot>
-      </arc>
       <arc id="ID1412717936"
            orientation="PtoT"
            order="1">
@@ -1785,14 +1686,14 @@ MUL</text>
         </bendpoint>
         <annot id="ID1412717937">
           <posattr x="16.000000"
-                   y="52.000000"/>
+                   y="58.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
-          <lineattr colour="Green"
+          <lineattr colour="Black"
                     thick="0"
                     type="Solid"/>
-          <textattr colour="Green"
+          <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
                 version="4.0.1">treglist</text>
@@ -1830,14 +1731,14 @@ MUL</text>
         </bendpoint>
         <annot id="ID1412720965">
           <posattr x="153.000000"
-                   y="74.000000"/>
+                   y="93.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
-          <lineattr colour="Green"
+          <lineattr colour="Black"
                     thick="0"
                     type="Solid"/>
-          <textattr colour="Green"
+          <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
                 version="4.0.1">move arg treglist</text>
@@ -1861,7 +1762,7 @@ MUL</text>
         <transend idref="ID1412782587"/>
         <placeend idref="ID1412629702"/>
         <annot id="ID1412785537">
-          <posattr x="-78.000000"
+          <posattr x="-75.000000"
                    y="-150.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -2150,8 +2051,8 @@ MUL</text>
                     bold="false"/>
         </bendpoint>
         <annot id="ID1412890042">
-          <posattr x="-188.000000"
-                   y="-459.000000"/>
+          <posattr x="-179.000000"
+                   y="-487.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -2195,7 +2096,7 @@ MUL</text>
                     bold="false"/>
         </bendpoint>
         <annot id="ID1412890945">
-          <posattr x="67.000000"
+          <posattr x="-82.000000"
                    y="-465.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -2227,8 +2128,8 @@ MUL</text>
         <transend idref="ID1413090037"/>
         <placeend idref="ID1412629702"/>
         <annot id="ID1413091094">
-          <posattr x="-96.500000"
-                   y="-300.000000"/>
+          <posattr x="-97.500000"
+                   y="-303.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -2272,8 +2173,8 @@ MUL</text>
                     bold="false"/>
         </bendpoint>
         <annot id="ID1413098541">
-          <posattr x="183.000000"
-                   y="-324.000000"/>
+          <posattr x="242.500000"
+                   y="-217.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -2439,7 +2340,7 @@ MUL</text>
                     bold="false"/>
         </bendpoint>
         <annot id="ID1413685055">
-          <posattr x="-105.000000"
+          <posattr x="-139.000000"
                    y="69.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -2450,7 +2351,7 @@ MUL</text>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">[]</text>
+                version="4.0.1">output_tinst</text>
         </annot>
       </arc>
       <arc id="ID1413693596"
@@ -2503,8 +2404,8 @@ MUL</text>
         <transend idref="ID1412647488"/>
         <placeend idref="ID1412629702"/>
         <annot id="ID1413785983">
-          <posattr x="-95.000000"
-                   y="-83.000000"/>
+          <posattr x="-96.000000"
+                   y="-76.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -2748,10 +2649,55 @@ MUL</text>
                 version="4.0.1">[]</text>
         </annot>
       </arc>
+      <arc id="ID1412667468"
+           orientation="TtoP"
+           order="1">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Blue"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Blue"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412652647"/>
+        <placeend idref="ID1412624589"/>
+        <bendpoint id="ID1412667472"
+                   serial="1">
+          <posattr x="-96.000000"
+                   y="294.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+        </bendpoint>
+        <annot id="ID1412667469">
+          <posattr x="-122.000000"
+                   y="214.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">jumpIP</text>
+        </annot>
+      </arc>
       <constraints/>
       <Aux id="ID1412868229">
-        <posattr x="168.000000"
-                 y="309.000000"/>
+        <posattr x="210.000000"
+                 y="378.000000"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
@@ -2764,8 +2710,8 @@ MUL</text>
         <text>prof_instruction.get_stat_strings()</text>
       </Aux>
       <Aux id="ID1414227096">
-        <posattr x="168.000000"
-                 y="294.000000"/>
+        <posattr x="210.000000"
+                 y="359.000000"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
@@ -2778,31 +2724,25 @@ MUL</text>
         <text>pipeline_discard.sum()</text>
       </Aux>
       <group id="ID1412872288"
-             name="Group 4">
+             name="Execute group">
         <group_elm idref="ID1412652647"/>
         <group_elm idref="ID1412652650"/>
         <group_elm idref="ID1412652652"/>
-        <group_elm idref="ID1412652648"/>
         <group_elm idref="ID1412652649"/>
         <group_elm idref="ID1412647488"/>
         <group_elm idref="ID1412647491"/>
         <group_elm idref="ID1412647493"/>
-        <group_elm idref="ID1412647489"/>
         <group_elm idref="ID1412647490"/>
         <group_elm idref="ID1412782587"/>
         <group_elm idref="ID1412782590"/>
         <group_elm idref="ID1412782592"/>
-        <group_elm idref="ID1412782588"/>
         <group_elm idref="ID1412782589"/>
         <group_elm idref="ID1412879512"/>
         <group_elm idref="ID1412879515"/>
-        <group_elm idref="ID1412881333"/>
         <group_elm idref="ID1412879517"/>
-        <group_elm idref="ID1412879513"/>
         <group_elm idref="ID1412882143"/>
         <group_elm idref="ID1413090037"/>
         <group_elm idref="ID1413090040"/>
-        <group_elm idref="ID1413090041"/>
         <group_elm idref="ID1413090042"/>
         <group_elm idref="ID1413090038"/>
         <group_elm idref="ID1413090039"/>
@@ -2833,12 +2773,7 @@ MUL</text>
           <text>&lt;same as model&gt;</text>
         </value>
       </option>
-      <option name="extensions.10008.enable">
-        <value>
-          <boolean>true</boolean>
-        </value>
-      </option>
-      <option name="extensions.10003.enable">
+      <option name="extensions.10001.enable">
         <value>
           <boolean>true</boolean>
         </value>
@@ -2853,12 +2788,7 @@ MUL</text>
           <boolean>true</boolean>
         </value>
       </option>
-      <option name="extensions.10011.enable">
-        <value>
-          <boolean>true</boolean>
-        </value>
-      </option>
-      <option name="extensions.10001.enable">
+      <option name="extensions.10008.enable">
         <value>
           <boolean>true</boolean>
         </value>
@@ -2869,6 +2799,16 @@ MUL</text>
         </value>
       </option>
       <option name="extensions.10004.enable">
+        <value>
+          <boolean>true</boolean>
+        </value>
+      </option>
+      <option name="extensions.10011.enable">
+        <value>
+          <boolean>true</boolean>
+        </value>
+      </option>
+      <option name="extensions.10003.enable">
         <value>
           <boolean>true</boolean>
         </value>
@@ -3086,14 +3026,14 @@ MUL</text>
     </options>
     <binders>
       <cpnbinder id="ID2222"
-                 x="236"
-                 y="25"
+                 x="233"
+                 y="24"
                  width="1666"
                  height="969">
         <sheets>
           <cpnsheet id="ID2215"
                     panx="-27.000000"
-                    pany="-25.000000"
+                    pany="-39.000000"
                     zoom="1.000000"
                     instance="ID2149">
             <zorder>
@@ -3129,7 +3069,7 @@ let
   fun predBindElem (CPU&apos;EXECUTE_ADD (1, 
                                {arg,t,treglist})) = true
       | predBindElem (CPU&apos;EXECUTE_JUMP (1, 
-                               {arg,ip,t,tinst_list,treglist})) = true
+                               {arg,ip,jumpIP,output_tinst,t,tinst_list,treglist})) = true
       | predBindElem (CPU&apos;EXECUTE_LOAD (1, 
                                {arg,cache,cache_out,delay,mem,reg,
                                t,treglist})) = true
@@ -3146,7 +3086,7 @@ let
   fun predBindElem (CPU&apos;EXECUTE_ADD (1, 
                                {arg,t,treglist})) = true
       | predBindElem (CPU&apos;EXECUTE_JUMP (1, 
-                               {arg,ip,t,tinst_list,treglist})) = true
+                               {arg,ip,jumpIP,output_tinst,t,tinst_list,treglist})) = true
       | predBindElem (CPU&apos;EXECUTE_LOAD (1, 
                                {arg,cache,cache_out,delay,mem,reg,
                                t,treglist})) = true
@@ -3165,7 +3105,7 @@ end</layout>
 let
   fun obsBindElem (CPU&apos;EXECUTE_ADD (1, {arg,t,treglist})) = getDuration t
       | obsBindElem (CPU&apos;EXECUTE_JUMP (1, 
-                               {arg,ip,t,tinst_list,treglist})) = getDuration t
+                               {arg,ip,jumpIP,output_tinst,t,tinst_list,treglist}))  = getDuration t
       | obsBindElem (CPU&apos;EXECUTE_LOAD (1, 
                                {arg,cache,cache_out,delay,mem,reg,
                                t,treglist})) = getDuration t
@@ -3179,7 +3119,7 @@ end
 let
   fun obsBindElem (CPU&apos;EXECUTE_ADD (1, {arg,t,treglist})) = getDuration t
       | obsBindElem (CPU&apos;EXECUTE_JUMP (1, 
-                               {arg,ip,t,tinst_list,treglist})) = getDuration t
+                               {arg,ip,jumpIP,output_tinst,t,tinst_list,treglist}))  = getDuration t
       | obsBindElem (CPU&apos;EXECUTE_LOAD (1, 
                                {arg,cache,cache_out,delay,mem,reg,
                                t,treglist})) = getDuration t
@@ -3221,7 +3161,8 @@ end</layout>
           <ml id="ID1414210491">fun pred (bindelem) = 
 let
   fun predBindElem (CPU&apos;EXECUTE_JUMP (1, 
-                               {arg,ip,t,tinst_list,treglist})) = true
+                               {arg,ip,jumpIP,output_tinst,t,
+                               tinst_list,treglist})) = true
       | predBindElem _ = false
 in
   predBindElem bindelem  
@@ -3229,7 +3170,8 @@ end
             <layout>fun pred (bindelem) = 
 let
   fun predBindElem (CPU&apos;EXECUTE_JUMP (1, 
-                               {arg,ip,t,tinst_list,treglist})) = true
+                               {arg,ip,jumpIP,output_tinst,t,
+                               tinst_list,treglist})) = true
       | predBindElem _ = false
 in
   predBindElem bindelem  
@@ -3240,7 +3182,8 @@ end</layout>
           <ml id="ID1414210495">fun obs (bindelem) = 
 let
   fun obsBindElem (CPU&apos;EXECUTE_JUMP (1, 
-                               {arg,ip,t,tinst_list,treglist})) = length tinst_list
+                               {arg,ip,jumpIP,output_tinst,t,
+                               tinst_list,treglist})) = (length tinst_list) - (length output_tinst)
       | obsBindElem _ = 0
 in
   obsBindElem bindelem  
@@ -3248,7 +3191,8 @@ end
             <layout>fun obs (bindelem) = 
 let
   fun obsBindElem (CPU&apos;EXECUTE_JUMP (1, 
-                               {arg,ip,t,tinst_list,treglist})) = length tinst_list
+                               {arg,ip,jumpIP,output_tinst,t,
+                               tinst_list,treglist})) = (length tinst_list) - (length output_tinst)
       | obsBindElem _ = 0
 in
   obsBindElem bindelem  
@@ -3376,8 +3320,10 @@ end</layout>
           <IndexNode expanded="false"/>
           <IndexNode expanded="false"/>
           <IndexNode expanded="false"/>
-          <IndexNode expanded="true"/>
-          <IndexNode expanded="true"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
+          <IndexNode expanded="false"/>
           <IndexNode expanded="false"/>
           <IndexNode expanded="false"/>
           <IndexNode expanded="false"/>
@@ -3435,7 +3381,7 @@ end</layout>
             <IndexNode expanded="true"/>
           </IndexNode>
         </IndexNode>
-        <IndexNode expanded="true">
+        <IndexNode expanded="false">
           <IndexNode expanded="false">
             <IndexNode expanded="false"/>
             <IndexNode expanded="false"/>
@@ -3445,7 +3391,7 @@ end</layout>
               <IndexNode expanded="false"/>
             </IndexNode>
           </IndexNode>
-          <IndexNode expanded="false">
+          <IndexNode expanded="true">
             <IndexNode expanded="true"/>
           </IndexNode>
           <IndexNode expanded="false">
